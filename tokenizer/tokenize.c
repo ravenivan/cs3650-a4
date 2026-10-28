@@ -1,17 +1,30 @@
+/**
+ * Tokenizer driver: reads one line from stdin and prints each token on its
+ * own line.
+ */
 #include <stdio.h>
 
 #include "../vector/vect.h"
 #include "tokens.h"
 
-const int BUFFER_SIZE = 1024;
+#define BUFFER_SIZE 1024
 
 int main(int argc, char **argv) {
+  (void) argc;
+  (void) argv;
+
   char buffer[BUFFER_SIZE];
 
-  if (fgets(buffer, BUFFER_SIZE, stdin) != NULL) {
-    vect_t *tokens = tokenize(buffer);
+  /* fgets returns NULL on end-of-file with nothing read. */
+  if (fgets(buffer, BUFFER_SIZE, stdin) == NULL) {
+    return 0;
   }
 
-  /* TODO: Print all the tokens, one item per line */
+  vect_t *tokens = tokenize(buffer);
+  for (unsigned int i = 0; i < vect_size(tokens); i++) {
+    printf("%s\n", vect_get(tokens, i));
+  }
 
+  vect_delete(tokens);
+  return 0;
 }
